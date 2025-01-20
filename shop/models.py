@@ -3,9 +3,7 @@ from django.db import models
 
 
 class Avatar(models.Model):
-
     """Модель для хранения аватара пользователя"""
-
     src = models.ImageField(
         upload_to="app_users/avatars/user_avatars/",
         default="app_users/avatars/default.png",
@@ -19,9 +17,7 @@ class Avatar(models.Model):
 
 
 class Profile(models.Model):
-
     """Модель профиля пользователя"""
-
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='profile'
     )
@@ -45,10 +41,12 @@ class Users(models.Model):
 
 
 class Category(models.Model):
+    """Модель для категории"""
     name = models.CharField(max_length=100)
 
 
 class Product(models.Model):
+    """Модель для хранения продуктов"""
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -56,4 +54,5 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    """Модель для хранения заказов"""
     name = models.CharField(max_length=100)
