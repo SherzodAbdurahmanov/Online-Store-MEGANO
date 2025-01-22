@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.authtoken.admin import User
 from rest_framework.response import Response
@@ -77,3 +78,10 @@ class ChangePasswordView(APIView):
             return Response({'message': 'Пароль успешно обновлён.'}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def avatar(request):
+    if request.method == "POST":
+        print(request.FILES["avatar"])
+
+    return HttpResponse(status=200)

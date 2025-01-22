@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from shop.models import Avatar, Profile
+from shop.models import Avatar, Profile, Users
 
 
 class AvatarSerializer(serializers.ModelSerializer):
@@ -28,7 +28,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
     newPassword = serializers.CharField(required=True)
 
     class Meta:
-        model = User
+        model = Users
         fields = ('currentPassword', 'newPassword')
 
     def validate_currentPassword(self, value):

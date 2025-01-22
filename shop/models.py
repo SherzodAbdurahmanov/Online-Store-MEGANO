@@ -38,6 +38,8 @@ class Profile(models.Model):
 
 class Users(models.Model):
     name = models.CharField(max_length=100)
+    newPassword = models.CharField(max_length=100)
+    currentPassword = models.CharField(max_length=100)
 
 
 class Category(models.Model):
