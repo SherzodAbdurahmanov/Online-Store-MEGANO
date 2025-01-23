@@ -3,7 +3,8 @@ from . import views
 from .views import (SignInView,
                     SignUpView,
                     ProfileView,
-                    ChangePasswordView)
+                    ChangePasswordView,
+                    CategoriesView)
 
 app_name = 'shop'
 
@@ -14,4 +15,6 @@ urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),
     path('profile/password/', ChangePasswordView.as_view(), name='change_password'),
     path('profile/avatar/', views.avatar, name='avatar'),
+    path('categories/', CategoriesView.as_view(), name='categories'),
+
 ]

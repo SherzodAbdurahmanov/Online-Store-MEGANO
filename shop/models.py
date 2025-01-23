@@ -36,15 +36,19 @@ class Profile(models.Model):
     )
 
 
-class Users(models.Model):
-    name = models.CharField(max_length=100)
-    newPassword = models.CharField(max_length=100)
-    currentPassword = models.CharField(max_length=100)
-
+# class Users(models.Model):
+#     name = models.CharField(max_length=100)
+#     newPassword = models.CharField(max_length=100, default='12345')
+#     currentPassword = models.CharField(max_length=100, default='1234')
 
 class Category(models.Model):
-    """Модель для категории"""
-    name = models.CharField(max_length=100)
+    """Модель для хранения категории"""
+    title = models.CharField(max_length=255, null=True)
+    image_src = models.URLField(max_length=200, null=True)  # URL для изображения
+    image_alt = models.CharField(max_length=255, null=True)  # Альтернативный текст для изображения
+
+    def __str__(self):
+        return self.title
 
 
 class Product(models.Model):

@@ -1,14 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
-from rest_framework import status, permissions
+from rest_framework import status, permissions, viewsets
 from rest_framework.authtoken.admin import User
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
-from shop.models import Profile
+from shop.models import Profile, Category
 from shop.serializers import (ProfileSerializer,
-                              ChangePasswordSerializer)
+                              ChangePasswordSerializer,
+                              CategorySerializer)
 
 
 class SignInView(APIView):
@@ -85,3 +86,12 @@ def avatar(request):
         print(request.FILES["avatar"])
 
     return HttpResponse(status=200)
+
+
+class CategoriesView(APIView):
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+
