@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Avatar(models.Model):
@@ -34,31 +34,3 @@ class Profile(models.Model):
         related_name="profile",
         verbose_name="Аватар",
     )
-
-
-# class Users(models.Model):
-#     name = models.CharField(max_length=100)
-#     newPassword = models.CharField(max_length=100, default='12345')
-#     currentPassword = models.CharField(max_length=100, default='1234')
-
-class Category(models.Model):
-    """Модель для хранения категории"""
-    title = models.CharField(max_length=255, null=True)
-    image_src = models.URLField(max_length=200, null=True)  # URL для изображения
-    image_alt = models.CharField(max_length=255, null=True)  # Альтернативный текст для изображения
-
-    def __str__(self):
-        return self.title
-
-
-class Product(models.Model):
-    """Модель для хранения продуктов"""
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-
-class Order(models.Model):
-    """Модель для хранения заказов"""
-    name = models.CharField(max_length=100)
