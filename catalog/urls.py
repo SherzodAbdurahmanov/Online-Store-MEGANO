@@ -5,7 +5,8 @@ from catalog.views import (CategoriesView,
                            PopularProductsView,
                            LimitedProductsView,
                            SalesView,
-                           BannersView)
+                           BannersView,
+                           BasketView)
 
 app_name = 'catalog'
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('products/limited/', LimitedProductsView.as_view(), name='products_limited'),
     path('sales/', SalesView.as_view(), name='sales'),
     path('banners/', BannersView.as_view(), name='banners'),
+    path('basket/', BasketView.as_view(), name='basket'),
 ]
