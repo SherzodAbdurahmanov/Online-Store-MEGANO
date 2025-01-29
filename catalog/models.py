@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -48,3 +49,13 @@ class Banner(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class BasketItem(models.Model):
+    """Модель для хранения товаров в корзине"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="basket_items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="basket_items")
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.title} for {self.user.username}"

@@ -2,7 +2,8 @@ from rest_framework import serializers
 from catalog.models import (Category,
                             Product,
                             SaleItem,
-                            Banner)
+                            Banner,
+                            BasketItem)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -30,3 +31,9 @@ class BannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
         fields = ['id', 'title', 'image', 'url']
+
+
+class BasketItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BasketItem
+        fields = ['id', 'product', 'quantity']
