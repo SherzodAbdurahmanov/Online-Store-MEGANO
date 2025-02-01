@@ -5,15 +5,19 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from catalog import models
 from catalog.models import (Category,
                             Product,
                             SaleItem,
-                            Banner, BasketItem)
+                            Banner,
+                            BasketItem,
+                            Tag, Review)
 from catalog.serializers import (CategorySerializer,
                                  ProductSerializer,
                                  SaleItemSerializer,
                                  BannerSerializer,
-                                 BasketItemSerializer)
+                                 BasketItemSerializer,
+                                 TagSerializer, ReviewSerializer)
 
 
 class CategoriesView(ListAPIView):
@@ -31,11 +35,52 @@ class ProductListView(ListAPIView):
     pagination_class = None
 
 
+class ProductDetailView(APIView):
+    def get(self, request, id):
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            return Response({"error": "Товар не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProductSerializer(product)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class PopularProductsView(APIView):
     def get(self, request):
         products = Product.objects.order_by('-rating', '-reviews')[:10]  # Топ-10 популярных
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ProductReviewView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, id):
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            return Response({"error": "Товар не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Достаем данные из запроса
+        text = request.data.get("text")
+        rating = request.data.get("rating")
+
+        # Проверяем корректность рейтинга
+        if not (1 <= int(rating) <= 5):
+            return Response({"error": "Рейтинг должен быть от 1 до 5"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Создаем отзыв
+        review = Review.objects.create(user=request.user, product=product, text=text, rating=rating)
+
+        # Пересчитываем средний рейтинг продукта
+        avg_rating = Review.objects.filter(product=product).aggregate(models.Avg('rating'))['rating__avg']
+        product.rating = round(avg_rating, 1)
+        product.reviews = Review.objects.filter(product=product).count()
+        product.save()
+
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class LimitedProductsView(APIView):
@@ -99,3 +144,16 @@ class BasketView(APIView):
             return Response({"message": "Товар удален из корзины"}, status=status.HTTP_200_OK)
         except BasketItem.DoesNotExist:
             return Response({"error": "Товар не найден в корзине"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class TagsView(APIView):
+    def get(self, request):
+        category_id = request.query_params.get("category")
+
+        if category_id:
+            tags = Tag.objects.filter(category_id=category_id)
+        else:
+            tags = Tag.objects.all()
+
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
