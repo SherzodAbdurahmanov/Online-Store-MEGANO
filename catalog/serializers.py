@@ -3,7 +3,8 @@ from catalog.models import (Category,
                             Product,
                             SaleItem,
                             Banner,
-                            BasketItem)
+                            BasketItem,
+                            Tag, Review)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -37,3 +38,16 @@ class BasketItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasketItem
         fields = ['id', 'product', 'quantity']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name', 'category']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'product', 'text', 'rating', 'created_at']
+        read_only_fields = ['user', 'product', 'created_at']

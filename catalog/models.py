@@ -59,3 +59,24 @@ class BasketItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.title} for {self.user.username}"
+
+
+class Tag(models.Model):
+    """Модель для хранения тегов"""
+    name = models.CharField(max_length=100, unique=True)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name="tags", null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Review(models.Model):
+    """Модель для хранения отзывов"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_reviews")
+    text = models.TextField()
+    rating = models.PositiveIntegerField()  # Оценка от 1 до 5
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.product.title}"
